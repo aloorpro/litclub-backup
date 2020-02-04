@@ -10,8 +10,7 @@ getPubs :: String -> IO String
 getPubs username = do
     x <- simpleHTTP (getRequest $ "http://litclub.net/~"
                      ++ username ++ "/pubs/list")
-    s <- decodeString <$> getResponseBody x
-    return s
+    decodeString <$> getResponseBody x
 
 main :: IO ()
 main = do
