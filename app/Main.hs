@@ -6,6 +6,12 @@ import System.IO
 import Network.HTTP
 import Codec.Binary.UTF8.String
 
+getPubs :: String -> IO String
+getPubs username = do
+    x <- simpleHTTP (getRequest $ "http://litclub.net/~"
+                     ++ username ++ "/pubs/list")
+    return $ decodeString <$> getResponseBody x
+
 main :: IO ()
 main = do
     [f] <- getArgs
