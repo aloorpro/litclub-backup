@@ -5,8 +5,8 @@ import GetPubs
 import System.Environment
 import System.IO
 import Network.HTTP
-import Codec.Binary.UTF8.String
-import Data.List (intercalate)
+import Codec.Binary.UTF8.String (decodeString)
+import Data.Foldable (traverse_)
 
 getPub :: String -> IO String
 getPub url = do
@@ -28,9 +28,8 @@ main :: IO ()
 main = do
     [name, path] <- getArgs
     ids <- pubs name
-    toFile path $ head ids
-    --let
-    --putStrLn . show . length $ pubs
-    --map (toFile path) pubs
+    print . length $ ids
+    traverse_ (toFile path) ids
+
     
 
