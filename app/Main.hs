@@ -17,10 +17,20 @@ getPubList :: String -> IO String
 getPubList username = getPub $ "http://litclub.net/~"
                      ++ username ++ "/pubs/list"
 
+toFile :: FilePath -> String -> IO ()
+toFile path s = do
+    raw <- getPub $ "http://litclub.net/libro/read.text-" ++ s ++ ".xml"
+    writeFile (path ++ getTitle raw ++ ".txt") $ getText raw
+
+pubs s = manyPubs <$> (getPubList s) 
+
 main :: IO ()
 main = do
-    [f] <- getArgs
-    s <- getPubList f
-    let pubs = manyPubs s
-    putStrLn $ show (length pubs) ++ "\n" ++ intercalate ", " pubs 
+    [name, path] <- getArgs
+    ids <- pubs name
+    toFile path $ head ids
+    --let
+    --putStrLn . show . length $ pubs
+    --map (toFile path) pubs
+    
 
