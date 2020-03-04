@@ -44,19 +44,19 @@ ifTag t c | getTag c == t = Just c
           | otherwise = Nothing
 
 -- collecting text
-textFrom :: Tag -> [Content] -> String
+textFrom :: Tag -> [Content] -> [String]
 textFrom t c = case findByTag t c of
     Just a -> allText $ elContent a
-    Nothing -> ""
+    Nothing -> []
 
-allText :: [Content] -> String
-allText [] = ""
-allText ((Elem x):xs) = allText (elContent x) ++ "\n" ++ allText xs
-allText ((Text x):xs) = cdData x ++ allText xs
+allText :: [Content] -> [String]
+allText [] = []
+allText ((Elem x):xs) = allText (elContent x) ++ allText xs
+allText ((Text x):xs) = cdData x : allText xs
 allText (_:xs) = allText xs
 
 -- exporting functions
 getTitle :: String -> String
-getTitle = textFrom titleTag . parseXML
+getTitle = concat . textFrom titleTag . parseXML
 getText :: String -> String
-getText  = textFrom textTag . parseXML
+getText  = unlines . textFrom textTag . parseXML
